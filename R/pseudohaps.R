@@ -15,9 +15,6 @@
 #' run_haplotyping().
 #' @param minHap Minimum size (nIndividuals) to keep haplotype combinations
 #' @param LD LD matrix input.
-#' @param het_as If het_as = "alt", heterozygous SNPs are recoded 'REF/ALT' are
-#' recoded as 'ALT/ALT' to reduce number of unique haplotypes, if het_as =
-#' "het", they are kept as 'REF/ALT'.
 #' @param keep_outliers When FALSE, marker group smoothing is performed to
 #' remove outliers.
 #'
@@ -29,14 +26,14 @@
 #' @return Returns intermediate of haplotype object
 #'
 
-pseudo_haps <- function(preMGfile, bin_vcf, minHap, LD, het_as = 'het', keep_outliers) {
+pseudo_haps <- function(preMGfile, bin_vcf, minHap, LD, keep_outliers) {
 
 ##Call allelic states for each SNP marker group across individuals
 #Extract SNPs in first MG cluster (MG1)
-  dbscan_c1 <- preMGfile %>%
+  dbscan_cvel <- preMGfile %>%
     dplyr::filter(.data$cluster == 1) %>% tibble::as_tibble()
   c1_vcf <- bin_vcf %>%
-    tibble::rownames_to_column() %>% dplyr::filter(.data$rowname %in% dbscan_c1$ID) %>% tibble::column_to_rownames()
+    tibble::rownames_to_column() %>% dplyr::filter(.data$rowname %in% dbscan_cvel$ID) %>% tibble::column_to_rownames()
 
 #Calculate most common (alternate or ref) allele for MG1 across all individuals
   i_modes_1 <- base::apply(c1_vcf %>% base::sapply(as.double), 2, crosshap::arith_mode) %>% tibble::as_tibble() %>%
@@ -46,6 +43,7 @@ pseudo_haps <- function(preMGfile, bin_vcf, minHap, LD, het_as = 'het', keep_out
   pseudoSNP <- tibble::tibble(Ind = base::colnames(c1_vcf), "1" = i_modes_1)
 
 #Repeat for all other MGs, iteratively adding to pseudoSNP bin_vcf
+  if(max(preMGfile$cluster) > 1){
 for (vel in c(2:base::max(preMGfile$cluster))) {
 
     dbscan_cvel <- preMGfile %>%
@@ -56,16 +54,12 @@ for (vel in c(2:base::max(preMGfile$cluster))) {
       base::apply(cvel_vcf %>% base::sapply(as.double), 2, crosshap::arith_mode) %>% tibble::as_tibble()
     pseudoSNP <- dplyr::bind_cols(pseudoSNP, i_modes_vel)
     base::colnames(pseudoSNP)[vel + 1] <- base::paste0(vel)
-  }
+}
+}
 
 #Convert heterozygous marker groups to homozygous alternate (optional)
-  if(het_as == "alt"){
-  pseudoSNP <- pseudoSNP %>%
-    dplyr::mutate_if(is.numeric,function(x) {base::gsub(1, 2, x,fixed = T, )})
-  }else{
     pseudoSNP <- pseudoSNP %>%
       dplyr::mutate_all((as.character))
-  }
 
 ##Identify haplotype frequencies from different marker group combinations
 
