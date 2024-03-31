@@ -1,7 +1,7 @@
 Package: crosshap
 Type: Package
 Title: Local Haplotype Clustering and Visualization
-Version: 1.2.2
+Version: 1.4.0
 Authors@R: 
   c(person(given = "Jacob", 
            family = "Marsh", 
@@ -36,12 +36,13 @@ Imports: cli, clustree, data.table, dbscan, dplyr, ggdist, ggplot2,
 Suggests: covr, knitr, rmarkdown, testthat (>= 3.0.0), umap, vdiffr
 Depends: R (>= 4.00)
 URL: https://jacobimarsh.github.io/crosshap/
+BugReports: https://github.com/jacobimarsh/crosshap/issues
 License: MIT + file LICENSE
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2023-05-02 07:02:12 UTC; jmarsh96
+Packaged: 2024-03-31 15:17:05 UTC; jmarsh96
 Author: Jacob Marsh [aut, cre] (<https://orcid.org/0000-0003-3734-2023>),
   Brady Johnston [aut] (<https://orcid.org/0000-0001-6301-2269>),
   Jakob Petereit [aut] (<https://orcid.org/0000-0003-2159-0380>)
 Repository: CRAN
-Date/Publication: 2023-05-02 07:50:08 UTC
+Date/Publication: 2024-03-31 15:40:02 UTC

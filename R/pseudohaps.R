@@ -73,11 +73,17 @@ for (vel in c(2:base::max(preMGfile$cluster))) {
     dplyr::tally() %>% dplyr::mutate(n=.data$n/(base::ncol(pseudoSNP)-1)) %>%
     tidyr::separate(col = .data$mgs_new, into = cnames, sep = "_") %>%
     tibble::as_tibble() %>%
-    dplyr::arrange(by_group = -.data$n)
+    dplyr::arrange(by_group = -.data$n) %>%
+    dplyr::filter(!dplyr::if_any(dplyr::everything(), ~ base::grepl('NA', .)))
 
 #Remove haplotypes with frequency below minHap and label remaining with letters
+#Remove any rows with
   overmin_hap_counts <- dplyr::filter(hapCounts, .data$n > minHap) %>%
     dplyr::mutate(hap=LETTERS[1:base::nrow(dplyr::filter(hapCounts, .data$n > minHap))])
+
+  if(nrow(overmin_hap_counts) < 2){
+    base::message(paste0('ERROR: Less than two unique haplotypes identified, try decreasing minHap or changing epsilon and MGmin parameters'))
+  }
 
 #Report what each individual's haplotype letter is based on their pseudoSNP combination
   base::suppressMessages(

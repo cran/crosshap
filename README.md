@@ -58,6 +58,8 @@ devtools::install_github("JacobIMarsh/crosshap")
 
 ## Usage
 
+[Documentation](https://jacobimarsh.github.io/crosshap/)
+
 In short, a typical crosshap analysis workflow involves the following
 steps. For a detailed explanation and walk through, see our [Getting
 started](https://jacobimarsh.github.io/crosshap/articles/Getting_started.html)
@@ -104,6 +106,6 @@ HapObject$Haplotypes_MGmin30_E0.6$Varfile
 
 ## Contact
 
-For technical queries feel free to contact me:
-<jacob.marsh@research.uwa.edu.au>. Please contact Prof. David Edwards
-for all other queries: <dave.edwards@uwa.edu.au> .
+For technical queries feel free to contact me: <jacob.marsh@unc.edu> .
+Please contact Prof. David Edwards for all other queries:
+<dave.edwards@uwa.edu.au> .
